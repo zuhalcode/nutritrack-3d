@@ -7,7 +7,7 @@ import { useAnimationStore } from '../orchestrator/animation-store';
 import { CAMERA_CONFIG } from '../orchestrator/motion-tokens';
 
 export function CameraController() {
-  const { camera } = useThree();
+  const { camera, size } = useThree();
   const currentState = useAnimationStore((s) => s.currentState);
   const isReducedMotion = useAnimationStore((s) => s.isReducedMotion);
 
@@ -15,22 +15,33 @@ export function CameraController() {
   const pointerTarget = useRef(new THREE.Vector2(0, 0));
 
   useFrame((state, delta) => {
-    // Select base target position based on state
+    // Responsive distance factor: on narrow mobile screens (aspect < 1.15), zoom out smoothly to frame orbital rings perfectly
+    const aspect = size.width / Math.max(1, size.height);
+    const aspectFactor = aspect < 1.15 ? Math.min(1.45, 1.15 / aspect) : 1.0;
+
+    // Select base target position based on state scaled by aspectFactor
     if (currentState === 'intro') {
-      targetPosition.current.set(0, 0, 9.8);
+      targetPosition.current.set(0, 0, 9.8 * aspectFactor);
     } else if (currentState === 'food-selected' || currentState === 'saving') {
-      targetPosition.current.set(0, -0.2, 6.3);
+      targetPosition.current.set(0, -0.2, 6.3 * aspectFactor);
     } else if (currentState === 'celebrating') {
-      targetPosition.current.set(0, 0.35, 5.8);
+      targetPosition.current.set(0, 0.35, 5.8 * aspectFactor);
     } else {
-      targetPosition.current.set(...CAMERA_CONFIG.defaultPosition);
+      targetPosition.current.set(
+        CAMERA_CONFIG.defaultPosition[0],
+        CAMERA_CONFIG.defaultPosition[1],
+        CAMERA_CONFIG.defaultPosition[2] * aspectFactor
+      );
     }
 
-    // Interactive pointer parallax (clamped & smoothed)
+    // Interactive pointer parallax (clamped & touch-dampened on small viewports)
     if (!isReducedMotion) {
+      const isMobile = size.width < 640;
+      const sensitivity = isMobile ? CAMERA_CONFIG.pointerSensitivity * 0.35 : CAMERA_CONFIG.pointerSensitivity;
+
       pointerTarget.current.set(
-        state.pointer.x * CAMERA_CONFIG.pointerSensitivity,
-        state.pointer.y * CAMERA_CONFIG.pointerSensitivity * 0.7
+        state.pointer.x * sensitivity,
+        state.pointer.y * sensitivity * 0.6
       );
     } else {
       pointerTarget.current.set(0, 0);

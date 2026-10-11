@@ -30,16 +30,16 @@ export function FoodLogSection({ onOpenAddFoodForMeal }: FoodLogSectionProps) {
   };
 
   return (
-    <section className="py-8 space-y-8">
+    <section className="py-6 sm:py-8 space-y-6 sm:space-y-8">
       <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white flex flex-wrap items-center gap-2">
             Metabolic Log
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-white/[0.05] text-zinc-400">
               {entries.length} entries recorded
             </span>
           </h2>
-          <p className="text-xs text-zinc-400 mt-1 font-mono">
+          <p className="text-[11px] sm:text-xs text-zinc-400 mt-1 font-mono">
             Derived directly from saved food logs and verified nutritional composition snapshots
           </p>
         </div>
@@ -60,8 +60,8 @@ export function FoodLogSection({ onOpenAddFoodForMeal }: FoodLogSectionProps) {
               className="rounded-2xl bg-[#0d1017] border border-white/[0.06] overflow-hidden"
             >
               {/* Meal Group Header */}
-              <div className="p-4 bg-[#111520]/80 border-b border-white/[0.05] flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="p-3.5 sm:p-4 bg-[#111520]/80 border-b border-white/[0.05] flex items-center justify-between">
+                <div className="flex items-center gap-2.5 sm:gap-3">
                   <div className="p-2 rounded-xl bg-white/[0.04] text-zinc-300 border border-white/[0.05]">
                     <MealIcon className="w-4 h-4" />
                   </div>
@@ -71,14 +71,15 @@ export function FoodLogSection({ onOpenAddFoodForMeal }: FoodLogSectionProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 sm:gap-3">
                   <span className="text-xs font-mono font-bold text-[#b6f028]">
                     {Math.round(mealCalories)} kcal
                   </span>
                   <button
                     onClick={() => onOpenAddFoodForMeal(meal.key)}
-                    className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-[#b6f028]/20 hover:text-[#b6f028] text-zinc-400 border border-white/[0.06] transition-colors"
+                    className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg bg-white/[0.04] hover:bg-[#b6f028]/20 hover:text-[#b6f028] text-zinc-400 border border-white/[0.06] transition-colors touch-manipulation cursor-pointer"
                     title={`Add food to ${meal.label}`}
+                    aria-label={`Add food to ${meal.label}`}
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -88,11 +89,11 @@ export function FoodLogSection({ onOpenAddFoodForMeal }: FoodLogSectionProps) {
               {/* Meal Items List */}
               <div className="divide-y divide-white/[0.04]">
                 {mealEntries.length === 0 ? (
-                  <div className="p-5 text-center">
+                  <div className="p-4 sm:p-5 text-center">
                     <p className="text-xs text-zinc-500 font-mono">No items logged for {meal.label}.</p>
                     <button
                       onClick={() => onOpenAddFoodForMeal(meal.key)}
-                      className="mt-2 text-xs font-mono text-[#b6f028] hover:underline"
+                      className="mt-2 min-h-[36px] px-3 py-1 text-xs font-mono text-[#b6f028] hover:underline touch-manipulation inline-flex items-center"
                     >
                       + Add food
                     </button>
@@ -105,46 +106,47 @@ export function FoodLogSection({ onOpenAddFoodForMeal }: FoodLogSectionProps) {
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#121622]/40 transition-colors group"
+                        className="p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 hover:bg-[#121622]/40 transition-colors group"
                       >
                         {/* Food Info */}
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-white">{entry.foodName}</span>
-                            <span className="text-xs font-mono text-zinc-400 flex items-center gap-1">
+                        <div className="min-w-0 flex-1 space-y-1">
+                          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                            <span className="text-sm font-medium text-white break-words sm:truncate">{entry.foodName}</span>
+                            <span className="text-xs font-mono text-zinc-400 flex items-center gap-1 shrink-0">
                               <Scale className="w-3 h-3 text-zinc-500" />
                               {entry.consumedGrams}g
                             </span>
-                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/[0.04] text-zinc-500">
+                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/[0.04] text-zinc-500 shrink-0">
                               {entry.provider === 'usda' ? 'USDA' : 'Verified'}
                             </span>
                           </div>
                           {entry.preparationState && (
-                            <p className="text-xs text-zinc-500">{entry.preparationState}</p>
+                            <p className="text-xs text-zinc-500 break-words">{entry.preparationState}</p>
                           )}
                         </div>
 
                         {/* Nutrition Snapshot Badges & Delete */}
-                        <div className="flex items-center gap-3 self-end sm:self-center">
-                          <div className="flex items-center gap-1.5 text-xs font-mono">
-                            <span className="px-2 py-0.5 rounded bg-white/[0.04] text-zinc-200 font-bold border border-white/[0.05]">
+                        <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto pt-1 sm:pt-0 border-t border-white/[0.03] sm:border-0">
+                          <div className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-mono flex-wrap">
+                            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-white/[0.04] text-zinc-200 font-bold border border-white/[0.05]">
                               {formatNutrientValue(entry.nutrients.calories, 0)}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-cyan-950/30 text-cyan-300 border border-cyan-500/20">
+                            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-cyan-950/30 text-cyan-300 border border-cyan-500/20">
                               P: {formatNutrientValue(entry.nutrients.protein, 1)}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-lime-950/30 text-lime-300 border border-lime-500/20">
+                            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-lime-950/30 text-lime-300 border border-lime-500/20">
                               C: {formatNutrientValue(entry.nutrients.carbs, 1)}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-purple-950/30 text-purple-300 border border-purple-500/20">
+                            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-purple-950/30 text-purple-300 border border-purple-500/20">
                               F: {formatNutrientValue(entry.nutrients.fat, 1)}
                             </span>
                           </div>
 
                           <button
                             onClick={() => handleDelete(entry.id)}
-                            className="p-1.5 text-zinc-500 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition-colors"
+                            className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2 text-zinc-500 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition-colors touch-manipulation cursor-pointer shrink-0"
                             title="Delete entry"
+                            aria-label={`Delete ${entry.foodName}`}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>

@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useAnimationStore } from '../orchestrator/animation-store';
 
-const PARTICLE_COUNT = 140;
+const PARTICLE_COUNT = typeof window !== 'undefined' && window.innerWidth < 640 ? 70 : 140;
 
 interface SimulationBuffers {
   positions: Float32Array;
@@ -13,16 +13,18 @@ interface SimulationBuffers {
   radii: Float32Array;
   speeds: Float32Array;
   yOffsets: Float32Array;
+  count: number;
 }
 
 function initBuffers(): SimulationBuffers {
-  const pos = new Float32Array(PARTICLE_COUNT * 3);
-  const ang = new Float32Array(PARTICLE_COUNT);
-  const rad = new Float32Array(PARTICLE_COUNT);
-  const spd = new Float32Array(PARTICLE_COUNT);
-  const yOff = new Float32Array(PARTICLE_COUNT);
+  const count = PARTICLE_COUNT;
+  const pos = new Float32Array(count * 3);
+  const ang = new Float32Array(count);
+  const rad = new Float32Array(count);
+  const spd = new Float32Array(count);
+  const yOff = new Float32Array(count);
 
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
+  for (let i = 0; i < count; i++) {
     const angle = Math.random() * Math.PI * 2;
     const radius = 1.6 + Math.random() * 2.4;
     const speed = 0.2 + Math.random() * 0.45;
@@ -38,13 +40,14 @@ function initBuffers(): SimulationBuffers {
     pos[i * 3 + 2] = Math.sin(angle) * radius;
   }
 
-  return {
-    positions: pos,
-    angles: ang,
-    radii: rad,
-    speeds: spd,
-    yOffsets: yOff,
-  };
+    return {
+      positions: pos,
+      angles: ang,
+      radii: rad,
+      speeds: spd,
+      yOffsets: yOff,
+      count,
+    };
 }
 
 export function ParticleVortex() {
@@ -79,9 +82,9 @@ export function ParticleVortex() {
 
     const posAttr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
     const array = posAttr.array as Float32Array;
-    const { angles, radii, speeds, yOffsets } = buffersRef.current;
+    const { angles, radii, speeds, yOffsets, count } = buffersRef.current;
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    for (let i = 0; i < count; i++) {
       angles[i] += delta * speeds[i] * (currentState === 'saving' ? 2.5 : 1.0);
 
       const currentRadius = radii[i] + burstRadius;

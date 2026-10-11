@@ -49,9 +49,9 @@ export function Header({ onOpenSettings }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#08090c]/80 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand Logo & Live System Pulse */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-[#121622] border border-[#b6f028]/30 shadow-[0_0_15px_rgba(182,240,40,0.2)]">
             <Activity className="w-5 h-5 text-[#b6f028]" />
             <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
@@ -60,9 +60,9 @@ export function Header({ onOpenSettings }: HeaderProps) {
             </span>
           </div>
           <div>
-            <span className="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+            <span className="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-1.5">
               Nutri<span className="text-[#b6f028]">Track</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-400 uppercase tracking-widest border border-white/[0.05]">
+              <span className="hidden sm:inline-flex text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-400 uppercase tracking-widest border border-white/[0.05]">
                 3D MVP
               </span>
             </span>
@@ -70,30 +70,30 @@ export function Header({ onOpenSettings }: HeaderProps) {
         </div>
 
         {/* Date Navigator */}
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded-xl bg-[#121622] border border-white/[0.08]">
+        <div className="flex items-center gap-0.5 sm:gap-1.5 px-1 sm:px-2 py-0.5 sm:py-1 rounded-xl bg-[#121622] border border-white/[0.08]">
           <button
             onClick={() => shiftDate(-1)}
             aria-label="Previous day"
-            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="w-8 h-8 sm:w-8 sm:h-8 min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <span className="px-2 text-xs font-mono font-medium text-zinc-200 min-w-[90px] text-center">
+          <span className="px-1 sm:px-2 text-[11px] sm:text-xs font-mono font-medium text-zinc-200 min-w-[65px] sm:min-w-[90px] text-center">
             {formatDateLabel(selectedDate)}
           </span>
           <button
             onClick={() => shiftDate(1)}
             aria-label="Next day"
-            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="w-8 h-8 sm:w-8 sm:h-8 min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
         {/* Gamification & Controls */}
-        <div className="flex items-center gap-3">
-          {/* Streak Indicator */}
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#121622] border border-white/[0.08]">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          {/* Streak Indicator (tablet and desktop) */}
+          <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#121622] border border-white/[0.08]">
             <Flame className={`w-4 h-4 ${gamification.streakDays > 0 ? 'text-amber-400 fill-amber-400/20' : 'text-zinc-500'}`} />
             <span className="text-xs font-mono font-medium text-zinc-300">
               {gamification.streakDays}d streak
@@ -101,15 +101,15 @@ export function Header({ onOpenSettings }: HeaderProps) {
           </div>
 
           {/* Level & XP Meter */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#121622] border border-white/[0.08]">
-            <Sparkles className="w-4 h-4 text-[#22d3ee]" />
+          <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-[#121622] border border-white/[0.08]">
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#22d3ee]" />
             <div className="flex flex-col">
-              <div className="flex items-center gap-1.5 text-[11px] font-mono leading-none">
-                <span className="text-zinc-400">LVL</span>
+              <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-mono leading-none">
+                <span className="text-zinc-400 hidden xs:inline">LVL</span>
                 <span className="font-bold text-[#22d3ee]">{gamification.level}</span>
-                <span className="text-[10px] text-zinc-500">({gamification.xp} XP)</span>
+                <span className="text-[9px] sm:text-[10px] text-zinc-500 hidden sm:inline">({gamification.xp} XP)</span>
               </div>
-              <div className="w-16 h-1 bg-zinc-800 rounded-full mt-1 overflow-hidden">
+              <div className="hidden sm:block w-16 h-1 bg-zinc-800 rounded-full mt-1 overflow-hidden">
                 <motion.div
                   className="h-full bg-gradient-to-r from-[#22d3ee] to-[#b6f028]"
                   initial={{ width: 0 }}
@@ -124,7 +124,7 @@ export function Header({ onOpenSettings }: HeaderProps) {
           <button
             onClick={onOpenSettings}
             aria-label="Nutritional targets settings"
-            className="p-2 rounded-xl bg-[#121622] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-[#b6f028]/40 hover:bg-[#1a2030] transition-colors"
+            className="w-9 h-9 sm:w-10 sm:h-10 min-w-[38px] min-h-[38px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl bg-[#121622] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-[#b6f028]/40 hover:bg-[#1a2030] transition-colors"
           >
             <SlidersHorizontal className="w-4 h-4" />
           </button>

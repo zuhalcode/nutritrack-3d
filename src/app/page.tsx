@@ -8,7 +8,7 @@ import { AddFoodModal } from '../features/nutrition/components/AddFoodModal';
 import { TargetSettingsModal } from '../components/TargetSettingsModal';
 import { MilestoneCelebration } from '../components/MilestoneCelebration';
 import { MealCategory } from '../features/nutrition/types';
-import { Database, ShieldCheck } from 'lucide-react';
+import { Database, ShieldCheck, Plus } from 'lucide-react';
 
 export default function Home() {
   const [isAddFoodOpen, setIsAddFoodOpen] = useState(false);
@@ -39,13 +39,25 @@ export default function Home() {
       <Header onOpenSettings={() => setIsSettingsOpen(true)} />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-10 pb-16">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 space-y-6 sm:space-y-10 pb-20 sm:pb-16">
         {/* Hero Section with 3D Canvas & Caloric Progress */}
         <HeroSection onOpenAddFood={() => openAddFood('lunch')} />
 
         {/* Daily Food Log Timeline */}
         <FoodLogSection onOpenAddFoodForMeal={(meal) => openAddFood(meal)} />
       </main>
+
+      {/* Mobile Floating Action Button (Quick Log Food) */}
+      <div className="fixed bottom-5 right-4 z-40 sm:hidden">
+        <button
+          onClick={() => openAddFood('lunch')}
+          className="h-12 w-12 rounded-full bg-[#b6f028] text-[#08090c] flex items-center justify-center shadow-[0_4px_25px_rgba(182,240,40,0.45)] active:scale-95 transition-transform touch-manipulation cursor-pointer border border-[#c6fa38]/50"
+          aria-label="Quick record food"
+          title="Record food intake"
+        >
+          <Plus className="w-6 h-6 stroke-[2.5]" />
+        </button>
+      </div>
 
       {/* Modals & Celebrations */}
       <AddFoodModal
@@ -62,19 +74,19 @@ export default function Home() {
       <MilestoneCelebration />
 
       {/* Footer */}
-      <footer className="w-full border-t border-white/[0.06] bg-[#07080a] py-8 text-xs text-zinc-500 font-mono">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="w-full border-t border-white/[0.06] bg-[#07080a] py-6 sm:py-8 text-[11px] sm:text-xs text-zinc-500 font-mono">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-[#b6f028]" />
+            <Database className="w-4 h-4 text-[#b6f028] shrink-0" />
             <span>Nutritional Data sourced from USDA FoodData Central & Indonesian TKPI</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-              Formula Calculated • No Estimated Guessing
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-4">
+            <span className="flex items-center gap-1 text-zinc-400">
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              Formula Calculated • No Guessing
             </span>
-            <span>NutriTrack 3D MVP © 2026</span>
+            <span className="text-zinc-600">NutriTrack 3D MVP © 2026</span>
           </div>
         </div>
       </footer>

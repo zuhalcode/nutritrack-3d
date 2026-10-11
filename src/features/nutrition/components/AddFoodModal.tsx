@@ -195,7 +195,7 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-y-auto">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -205,45 +205,48 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
           className="fixed inset-0 bg-black/80 backdrop-blur-md"
         />
 
-        {/* Modal Window */}
+        {/* Modal Window / Mobile Bottom Sheet */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          initial={{ opacity: 0, scale: 0.96, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
+          exit={{ opacity: 0, scale: 0.96, y: 30 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-2xl bg-[#0e1118] border border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          className="relative w-full max-w-2xl bg-[#0e1118] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[88dvh] sm:max-h-[90vh]"
         >
+          {/* Mobile Sheet Drag Indicator */}
+          <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mt-2.5 -mb-1 sm:hidden shrink-0" />
+
           {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-white/[0.08] bg-[#121622]/60">
+          <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/[0.08] bg-[#121622]/60">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-lg bg-[#b6f028]/10 text-[#b6f028] border border-[#b6f028]/20">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-base font-semibold text-white tracking-tight">Record Nutrition</h2>
-                <p className="text-xs text-zinc-400">Search database & specify grams consumed</p>
+                <h2 className="text-sm sm:text-base font-semibold text-white tracking-tight">Record Nutrition</h2>
+                <p className="text-[11px] sm:text-xs text-zinc-400">Search database & specify grams consumed</p>
               </div>
             </div>
             <button
               onClick={handleClose}
               aria-label="Close dialog"
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors touch-manipulation cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="p-5 overflow-y-auto space-y-5 flex-1">
-            {/* Search Input Bar */}
+          <div className="p-4 sm:p-5 overflow-y-auto space-y-4 sm:space-y-5 flex-1">
+            {/* Search Input Bar (text-base on mobile to avoid iOS Safari auto-zoom) */}
             <div className="relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
               <input
                 ref={searchInputRef}
                 type="text"
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
-                placeholder="Search food (e.g., cooked white rice, chicken breast, tempeh)..."
-                className="w-full pl-10 pr-10 py-3 bg-[#151926] border border-white/[0.1] rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#b6f028] focus:ring-1 focus:ring-[#b6f028] transition-all"
+                placeholder="Search food (e.g., cooked rice, chicken, oats)..."
+                className="w-full min-h-[44px] pl-10 pr-10 py-2.5 sm:py-3 bg-[#151926] border border-white/[0.1] rounded-xl text-base sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#b6f028] focus:ring-1 focus:ring-[#b6f028] transition-all"
               />
               {isLoading && (
                 <Loader2 className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b6f028] animate-spin" />
@@ -251,7 +254,8 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
               {query && !isLoading && (
                 <button
                   onClick={() => handleQueryChange('')}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                  aria-label="Clear search input"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 min-w-[40px] min-h-[40px] flex items-center justify-center text-zinc-400 hover:text-white touch-manipulation"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -356,13 +360,13 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
                   {/* Meal Category */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-mono text-zinc-400">MEAL CATEGORY</label>
-                    <div className="grid grid-cols-2 gap-1.5">
+                    <div className="grid grid-cols-2 gap-2">
                       {(['breakfast', 'lunch', 'dinner', 'snack'] as MealCategory[]).map((cat) => (
                         <button
                           key={cat}
                           type="button"
                           onClick={() => setMealCategory(cat)}
-                          className={`py-2 px-3 text-xs font-medium rounded-xl capitalize transition-all border ${
+                          className={`min-h-[44px] py-2 px-3 text-xs font-medium rounded-xl capitalize transition-all border flex items-center justify-center touch-manipulation cursor-pointer ${
                             mealCategory === cat
                               ? 'bg-[#b6f028]/15 border-[#b6f028] text-[#b6f028]'
                               : 'bg-[#151926] border-white/[0.08] text-zinc-300 hover:bg-[#1c2234]'
@@ -391,7 +395,7 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
                         max="2500"
                         value={consumedGrams}
                         onChange={(e) => setConsumedGrams(Math.max(1, parseInt(e.target.value) || 0))}
-                        className="w-full px-3 py-2 bg-[#151926] border border-white/[0.1] rounded-xl text-sm font-mono text-white focus:outline-none focus:border-[#b6f028]"
+                        className="w-full min-h-[44px] px-3.5 py-2 bg-[#151926] border border-white/[0.1] rounded-xl text-base sm:text-sm font-mono text-white focus:outline-none focus:border-[#b6f028]"
                       />
                       <input
                         type="range"
@@ -400,7 +404,7 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
                         step="5"
                         value={consumedGrams}
                         onChange={(e) => setConsumedGrams(parseInt(e.target.value))}
-                        className="w-full accent-[#b6f028]"
+                        className="w-full h-6 accent-[#b6f028] touch-manipulation cursor-pointer"
                       />
                       <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                         <span>50g</span>
@@ -414,44 +418,44 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
 
                 {/* Instant Automatic Nutritional Preview (Calculated strictly via formula) */}
                 {calculatedNutrients && (
-                  <div className="p-4 rounded-xl bg-[#121622] border border-white/[0.08] space-y-3">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-[#121622] border border-white/[0.08] space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono text-zinc-300">CALCULATED NUTRIENTS FOR {consumedGrams}g</span>
-                      <span className="text-xs font-mono text-[#b6f028]">Automatic Lookup</span>
+                      <span className="text-xs font-mono text-zinc-300">CALCULATED FOR {consumedGrams}g</span>
+                      <span className="text-xs font-mono text-[#b6f028]">Auto Formula</span>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-2 text-center">
-                      <div className="p-2.5 rounded-lg bg-[#0e1118] border border-white/[0.05]">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+                      <div className="p-2 sm:p-2.5 rounded-lg bg-[#0e1118] border border-white/[0.05]">
                         <span className="text-[10px] font-mono text-zinc-400 uppercase block">Calories</span>
-                        <span className="text-base font-bold font-mono text-white">
+                        <span className="text-base sm:text-lg font-bold font-mono text-white">
                           {formatNutrientValue(calculatedNutrients.calories, 0)}
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-lg bg-[#0e1118] border border-cyan-500/20">
+                      <div className="p-2 sm:p-2.5 rounded-lg bg-[#0e1118] border border-cyan-500/20">
                         <span className="text-[10px] font-mono text-cyan-400 uppercase block">Protein</span>
-                        <span className="text-base font-bold font-mono text-cyan-200">
+                        <span className="text-base sm:text-lg font-bold font-mono text-cyan-200">
                           {formatNutrientValue(calculatedNutrients.protein, 1)}
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-lg bg-[#0e1118] border border-[#b6f028]/20">
+                      <div className="p-2 sm:p-2.5 rounded-lg bg-[#0e1118] border border-[#b6f028]/20">
                         <span className="text-[10px] font-mono text-[#b6f028] uppercase block">Carbs</span>
-                        <span className="text-base font-bold font-mono text-lime-200">
+                        <span className="text-base sm:text-lg font-bold font-mono text-lime-200">
                           {formatNutrientValue(calculatedNutrients.carbs, 1)}
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-lg bg-[#0e1118] border border-purple-500/20">
+                      <div className="p-2 sm:p-2.5 rounded-lg bg-[#0e1118] border border-purple-500/20">
                         <span className="text-[10px] font-mono text-purple-400 uppercase block">Fat</span>
-                        <span className="text-base font-bold font-mono text-purple-200">
+                        <span className="text-base sm:text-lg font-bold font-mono text-purple-200">
                           {formatNutrientValue(calculatedNutrients.fat, 1)}
                         </span>
                       </div>
                     </div>
 
                     {/* Secondary Nutrients Bar */}
-                    <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1 border-t border-white/[0.04] font-mono">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-zinc-400 pt-2 border-t border-white/[0.04] font-mono">
                       <span>Fiber: {formatNutrientValue(calculatedNutrients.fiber, 1)}</span>
                       <span>Sugar: {formatNutrientValue(calculatedNutrients.sugar, 1)}</span>
                       <span>Sodium: {formatNutrientValue(calculatedNutrients.sodium, 0)}</span>
@@ -463,17 +467,17 @@ export function AddFoodModal({ isOpen, onClose, defaultMeal = 'lunch' }: AddFood
           </div>
 
           {/* Footer Actions */}
-          <div className="p-4 border-t border-white/[0.08] bg-[#121622]/60 flex items-center justify-end gap-3">
+          <div className="p-3.5 sm:p-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] border-t border-white/[0.08] bg-[#121622]/80 backdrop-blur-sm flex items-center justify-end gap-3">
             <button
               onClick={handleClose}
-              className="px-4 py-2 text-xs font-mono text-zinc-400 hover:text-white rounded-xl transition-colors"
+              className="min-h-[44px] px-4 py-2.5 text-xs font-mono text-zinc-400 hover:text-white rounded-xl transition-colors touch-manipulation cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={!selectedFoodDetail || consumedGrams <= 0}
-              className={`px-5 py-2.5 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition-all ${
+              className={`min-h-[44px] px-5 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold flex items-center justify-center gap-2 transition-all touch-manipulation cursor-pointer ${
                 selectedFoodDetail && consumedGrams > 0
                   ? 'bg-[#b6f028] hover:bg-[#cbfb48] text-[#08090c] shadow-[0_0_20px_rgba(182,240,40,0.3)]'
                   : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'

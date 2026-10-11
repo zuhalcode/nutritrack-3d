@@ -63,7 +63,7 @@ export function KineticCoreScene() {
   }
 
   return (
-    <div className="relative w-full h-full min-h-[380px] sm:min-h-[440px] md:min-h-[480px]">
+    <div className="relative w-full h-full min-h-[280px] sm:min-h-[380px] md:min-h-[460px] touch-pan-y-canvas">
       <CanvasErrorBoundary fallback={<WebGLFallback />}>
         <Canvas
           camera={{
@@ -72,7 +72,7 @@ export function KineticCoreScene() {
             far: CAMERA_CONFIG.far,
             position: CAMERA_CONFIG.defaultPosition,
           }}
-          dpr={[1, 2]}
+          dpr={[1, typeof window !== 'undefined' && window.innerWidth < 768 ? 1.5 : 2]}
           gl={{
             antialias: true,
             alpha: true,
