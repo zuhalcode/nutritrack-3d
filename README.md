@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NutriTrack — Immersive 3D Nutrition Experience
 
-## Getting Started
+> **Production-Quality Greenfield MVP** combining real-time 3D cinematic animation orchestration with verified nutrition data lookups from **USDA FoodData Central** and the **Indonesian Food Composition Tables (TKPI)**.
 
-First, run the development server:
+---
 
+## 🌟 Highlights
+
+- **Kinetic 3D Energy Core**: Real-time sculptural WebGL visualization built with Three.js & React Three Fiber.
+- **Dynamic Metabolic Feedback**: Orbital rings, crystalline core, and procedural vortex particles respond dynamically to real nutritional state (caloric percentage, macro ratios, save shockwaves, and milestone bursts).
+- **Automated Nutrition Calculations**: Users specify **only** food name and consumed weight in grams. Calories, protein, carbohydrates, fat, fiber, sugars, sodium, cholesterol, and caffeine are calculated automatically with strictly preserved missing-data semantics.
+- **Provider Adapter**: Seamlessly integrates official **USDA FoodData Central API** with automatic fallback to verified Indonesian and international food composition records.
+- **Versioned Local Persistence**: Client-side storage via Zustand `persist` with stable nutrient snapshots per food log entry.
+- **Gamification Mechanics**: Experience Points (XP), dynamic levels, logging streaks, and non-duplicated milestone achievement notifications.
+- **Accessibility & Fallbacks**: Fully compliant with `prefers-reduced-motion` and incorporates a high-fidelity 2D kinetic radial fallback when WebGL is unavailable.
+
+---
+
+## 🛠️ Architecture & Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js App Router (16.4.0) with Turbopack |
+| **Language** | Strict TypeScript (5.x) |
+| **Styling** | Tailwind CSS (4.x) with custom dark-first futuristic tokens |
+| **3D Rendering** | Three.js (0.186.x), `@react-three/fiber` (9.8.x), `@react-three/drei` (10.7.x) |
+| **UI Motion** | Motion for React (14.x) |
+| **State & Persistence** | Zustand (5.x) with `persist` middleware (version 1) |
+| **Validation** | Zod (4.x) |
+| **Testing** | Vitest (5.x), Testing Library, JSDOM |
+| **Icons** | Lucide React |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- **Node.js**: `v20.x` or `v22.x` (tested on Node `v22.23.2`)
+- **npm**: `10.x+`
+
+### 2. Environment Variables
+Copy `.env.example` to `.env.local`:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Configure your USDA FoodData Central API key:
+```env
+# Server-only. Get key at: https://fdc.nal.usda.gov/api-key-signup.html
+# If empty, the app runs in verified dataset mode with authentic USDA/TKPI staples.
+USDA_FDC_API_KEY=your_usda_api_key_here
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Installation & Run
+```bash
+# Install dependencies
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Run unit and integration tests
+npm test
 
-## Learn More
+# Type-check
+npx tsc --noEmit
 
-To learn more about Next.js, take a look at the following resources:
+# Lint
+npm run lint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Build for production
+npm run build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Start production server
+npm start
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧮 Automatic Calculation Formula
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All canonical nutrients per reference basis (typically 100g) are calculated with pure, deterministic functions:
+
+$$\text{CalculatedValue} = \frac{\text{ValuePerReference} \times \text{ConsumedGrams}}{\text{ReferenceBasisGrams}}$$
+
+- **Missing Data Handling**: Unknown or unavailable nutrients are strictly kept as `null` with `isAvailable: false`. They are never converted into fabricated zeroes.
+- **Precision**: Calculations maintain full IEEE-754 double precision internally and are rounded only at the presentation boundary (calories to integer, macros to 1 decimal place).
+
+---
+
+## 🧪 Test Suites
+
+15 comprehensive unit & integration tests covering:
+1. `src/tests/calculations.test.ts`: Formula calculations, zero/negative weight rejections, missing nutrient preservation, aggregations.
+2. `src/tests/usda-adapter.test.ts`: USDA raw nutrient mappings, unit conversions (kJ/kcal, g/mg), search result filtering.
+3. `src/tests/food-log-store.test.ts`: Immutable entry snapshots, daily total derivation, non-duplicated milestone awards, streak calculations.
+4. `src/tests/animation-orchestrator.test.ts`: State machine transitions, energy pulses, celebration triggers, reduced motion toggles.
